@@ -5,7 +5,7 @@ rawInput = f.readlines()
 f.close()
 
 lines = list(rawInput)
-#lines = ['R8', 'R4', 'R4', 'R8']
+
 directions = {0: (0, 1), 90: (1, 0), 180: (0, -1), 270: (-1, 0)}
 angle = 0
 coordinate = [0, 0]
