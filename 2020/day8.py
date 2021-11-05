@@ -1,96 +1,60 @@
-with open("8test.txt") as file:
+with open("day8input.txt") as file:
     
     input = [lines.strip().split() for lines in file]
     
-    # lines = list(enumerate(input))
+    formatted_input = list(enumerate(input))
 
-    # line_jumper = 0
-    # acc = 0
-    # loop_detector = []
+    loop_detector = []
     
-    # def func(enum, op, jump, line_counter, acc_counter):
-    #     while enum not in loop_detector:
-    #         if op == 'nop':
-    #             line_counter = line_counter+1
-    #             acc_counter = acc_counter
-    #         if op == 'jmp':
-    #             line_counter = line_counter+int(jump)
-    #             acc_counter = acc_counter
-    #         if op == 'acc':
-    #             line_counter = line_counter+1
-    #             acc_counter = acc_counter+int(jump)
-            
-    #         loop_detector.append(enum)
-            
-    #         return func(lines[line_counter][0], lines[line_counter][1][0], lines[line_counter][1][1], line_counter, acc_counter)
+    def rules(op, jump, line_counter, acc_counter):
+            if op == 'nop':
+                line_counter = line_counter+1
+            if op == 'jmp':
+                line_counter = line_counter+int(jump)
+            if op == 'acc':
+                line_counter = line_counter+1
+                acc_counter = acc_counter+int(jump)
+                
+            return [line_counter, acc_counter]
         
-    #     else:
-    #         print(acc_counter)
+    def part1func(lines, line_counter, acc_counter):
+        while line_counter not in loop_detector:
+            
+            ans = rules(lines[line_counter][1][0], lines[line_counter][1][1], line_counter, acc_counter)
+           
+            loop_detector.append(line_counter)
+            
+            return part1func(lines, ans[0], ans[1])     
+       
+        else:
+            return acc_counter
       
-    # func(lines[line_jumper][0], lines[line_jumper][1][0], lines[line_jumper][1][1], line_jumper, acc)
-
-    # print(lines)
+    print(part1func(formatted_input, 0, 0))
     
-    counter = 0
+    def part2func(lines, line_counter, acc_counter):
+        while line_counter not in loop_detector:
+        
+            ans = rules(lines[line_counter][1][0], lines[line_counter][1][1], line_counter, acc_counter)
+           
+            loop_detector.append(line_counter)
+                      
+            try:
+                return part2func(lines, ans[0], ans[1])
+            except:
+                print(acc_counter)
+
     for i in range(len(input)):
         new_input = []
         for enum, line in enumerate(input):
             
-            if line[0] == 'jmp' and counter == enum:
+            if line[0] == 'jmp' and i == enum:
                 new_input.append([enum, ['nop', line[1]]])
-            elif line[0] == 'nop' and counter == enum:
+            elif line[0] == 'nop' and i == enum:
                 new_input.append([enum, ['jmp', line[1]]])
             else:
-                new_input.append([enum, line])
-        counter += 1
-        
-        line_jumper = 0
-        acc = 0
-        loop_detector = []
+                new_input.append([enum, line])        
 
-        def func2(enum, op, jump, line_counter, acc_counter):
-            while enum not in loop_detector:
-                if op == 'nop':
-                    line_counter = line_counter+1
-                    acc_counter = acc_counter
-                if op == 'jmp':
-                    line_counter = line_counter+int(jump)
-                    acc_counter = acc_counter
-                if op == 'acc':
-                    line_counter = line_counter+1
-                    acc_counter = acc_counter+int(jump)
+        loop_detector = []
+        part2func(new_input, 0, 0)
                 
-                loop_detector.append(enum)
-                try:
-                    return func2(new_input[line_counter][0], new_input[line_counter][1][0], new_input[line_counter][1][1], line_counter, acc_counter)
-                except:
-                    print(acc_counter)
-            
-                
-          
-    
-        func2(new_input[line_jumper][0], new_input[line_jumper][1][0], new_input[line_jumper][1][1], line_jumper, acc)
-        
-        
-            
-    
-    # def func(enum, op, jump, line_counter, acc_counter):
-    #     while enum not in loop_detector:
-    #         if op == 'nop':
-    #             line_counter = line_counter+1
-    #             acc_counter = acc_counter
-    #         if op == 'jmp':
-    #             line_counter = line_counter+int(jump)
-    #             acc_counter = acc_counter
-    #         if op == 'acc':
-    #             line_counter = line_counter+1
-    #             acc_counter = acc_counter+int(jump)
-    #         loop_detector.append(enum)
-            
-            
-    #         return func(lines[line_counter][0], lines[line_counter][1][0], lines[line_counter][1][1], line_counter, acc_counter)
-    #     else:
-    #         print(acc_counter)
-      
-    # func(lines[line_jumper][0], lines[line_jumper][1][0], lines[line_jumper][1][1], line_jumper, acc)
 
