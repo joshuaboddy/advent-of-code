@@ -1,5 +1,3 @@
-puzzle_input = "254032-789860"
-
 function part1(string_range)
 
     range = parse.(Int, split(string_range, "-"))
@@ -46,6 +44,8 @@ function part2(string_range)
     return cnt
 
 end
+
+puzzle_input = "254032-789860"
 
 println(part1(puzzle_input))
 println(part2(puzzle_input))
