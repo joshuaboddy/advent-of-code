@@ -23,7 +23,7 @@ function make_all_moves(path)
         steps = [steps; [1 for n=1:parse(Int64, (move[2:end]))]]
     end
 
-    return coords_hit, steps
+    return coords_hit, accumulate(+, steps)
 
 end
 
@@ -43,7 +43,7 @@ function both_parts()
 
     crossings = intersect(coords[2], coords[3])
     manhattan = minimum([sum(abs.(x)) for x in crossings if x != [0,0]])
-    min_steps_in_crossing = minimum([accumulate(+, steps[2])[findfirst(isequal(c), coords[2])] + accumulate(+, steps[3])[findfirst(isequal(c), coords[3])] for c in crossings if c != [0,0]])
+    min_steps_in_crossing = minimum([steps[2][findfirst(isequal(c), coords[2])] + steps[3][findfirst(isequal(c), coords[3])] for c in crossings if c != [0,0]])
     
     return manhattan, min_steps_in_crossing
 
