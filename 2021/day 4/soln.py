@@ -1,17 +1,6 @@
 import pandas as pd
 import numpy as np
 
-def bingo(df):
-    
-    marked = df == 'x'
-    
-    column_winner = (marked.sum(axis=0) == len(df)).any()
-    row_winner = (marked.sum(axis=1) == len(df)).any()
-    diag_winner = False #(np.diag(marked).sum() == len(df)) | (np.diag(np.fliplr(marked)).sum() == len(df))
-
-    return (column_winner | row_winner | diag_winner)
-
-
 def parse():
     
     f = open('input.txt')
@@ -22,52 +11,43 @@ def parse():
     lines = lines + ['\n']
     
     numbers_drawn = [int(x) for x in lines[0].strip().split(',')]
-    
-    bingo_cards = []
-    current_card = pd.DataFrame()
-    
-    for line in lines[2:]:
-        
-        line = line.strip()
-        
-        if line != '':
-            current_card = current_card.append(pd.Series([int(x) for x in line.split()]),
-                                               ignore_index=True)
-        else:
-            bingo_cards.extend([current_card])
-            current_card = pd.DataFrame()
+   
+    bingo_cards = pd.DataFrame([line.strip().split() for line in lines[2:] if line != '\n']).astype(int)
     
     return numbers_drawn, bingo_cards
 
-
-def part1():
+def bingo(df):
     
-    numbers_drawn, bingo_cards = parse()
+    marked = df == 'x'
+    
+    column_winner = (marked.groupby(marked.index // 5).sum() == 5).any(axis=1)
+    row_winner = (marked.sum(axis=1) == 5).groupby(marked.index // 5).any()
+    
+    return (column_winner | row_winner)
 
+def answer(numbers_drawn, bingo_cards, part):
+    
+    card_rows = len(bingo_cards)
+    
     for draw in numbers_drawn:
-            for card_num, card in enumerate(bingo_cards):
-                card = card.replace(draw, 'x')
-                bingo_cards[card_num]= card
-                if bingo(card):
-                    return card.replace('x',0).to_numpy().sum() * draw
+        bingo_cards = bingo_cards.replace(draw, 'x')
+        is_bingo = bingo(bingo_cards)
+        
+        if is_bingo.any():
+            
+            if part == 'part1':
+                if len(bingo_cards)==card_rows:
+                    idx = is_bingo[is_bingo].idxmax()
+                    return bingo_cards.iloc[idx*5: (idx+1)*5].replace('x', 0).to_numpy().sum() * draw
+            
+            elif part == 'part2':
+                if len(bingo_cards)==5:
+                    return bingo_cards.replace('x', 0).to_numpy().sum() * draw
+                else:
+                    idxs = [y for x in is_bingo[is_bingo].index for y in range(x*5, (x+1)*5)]
+                    bingo_cards = bingo_cards[~bingo_cards.index.isin(idxs)]
 
-
-def part2():
-    
-    numbers_drawn, bingo_cards = parse()
-    
-    done = []
-    if len(done) != len(bingo_cards):
-        for draw in numbers_drawn:
-            for card_num, card in enumerate(bingo_cards):
-                if card_num not in done:
-                    card = card.replace(draw, 'x')
-                    bingo_cards[card_num]= card
-                    if bingo(card):
-                        done = done + [card_num]
-                        latest_result = card.replace('x',0).to_numpy().sum() * draw
-
-    return latest_result
-
-print(part1())
-print(part2())
+            
+numbers_drawn, bingo_cards = parse()
+print(answer(numbers_drawn, bingo_cards, 'part1'))
+print(answer(numbers_drawn, bingo_cards, 'part2'))
