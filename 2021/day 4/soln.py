@@ -8,8 +8,7 @@ def parse():
     f.close()
     
     lines = list(raw)
-    lines = lines + ['\n']
-    
+
     numbers_drawn = [int(x) for x in lines[0].strip().split(',')]
    
     bingo_cards = pd.DataFrame([line.strip().split() for line in lines[2:] if line != '\n']).astype(int)
