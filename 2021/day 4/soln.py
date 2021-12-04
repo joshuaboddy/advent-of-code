@@ -43,33 +43,31 @@ def parse():
 def part1():
     
     numbers_drawn, bingo_cards = parse()
-    
-    result = 0
-    for draw in numbers_drawn:
-        if result == 0:
-            for card_num, card in enumerate(bingo_cards):
-                    card = card.replace(draw, 'x')
-                    bingo_cards[card_num]= card
-                    if bingo(card):
-                        result = card.replace('x',0).to_numpy().sum() * draw
 
-    return result
+    for draw in numbers_drawn:
+            for card_num, card in enumerate(bingo_cards):
+                card = card.replace(draw, 'x')
+                bingo_cards[card_num]= card
+                if bingo(card):
+                    return card.replace('x',0).to_numpy().sum() * draw
+
 
 def part2():
     
     numbers_drawn, bingo_cards = parse()
     
     done = []
-    for draw in numbers_drawn:
-        for card_num, card in enumerate(bingo_cards):
-            if card_num not in done:
-                card = card.replace(draw, 'x')
-                bingo_cards[card_num]= card
-                if bingo(card):
-                    done = done + [card_num]
-                    result = card.replace('x',0).to_numpy().sum() * draw
+    if len(done) != len(bingo_cards):
+        for draw in numbers_drawn:
+            for card_num, card in enumerate(bingo_cards):
+                if card_num not in done:
+                    card = card.replace(draw, 'x')
+                    bingo_cards[card_num]= card
+                    if bingo(card):
+                        done = done + [card_num]
+                        latest_result = card.replace('x',0).to_numpy().sum() * draw
 
-    return result
+    return latest_result
 
 print(part1())
 print(part2())
