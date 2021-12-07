@@ -7,22 +7,14 @@ data = readlines(path * "\\input.txt")[1]
 pattern = r"-?\d+"
 parsed_data = [parse.(Int64, x) for x in SubString.(data, findall(pattern,data))]
 
-function part1(ints)
+part1(ints) = sum(abs.(ints .- median(ints)))
 
-   return sum(abs.(ints .- median(ints)))
-
-end
-
-function triangle(n)
-
-    return n * (n+1) / 2
-
-end
+triangle(n) = n * (n+1) / 2
 
 function part2(ints)
 
-    m = round(mean(ints))
-    return minimum([sum(triangle.(abs.(ints .- i))) for i ∈ m-1:m+1])
+    start = round(mean(ints))
+    return minimum([sum(triangle.(abs.(ints .- i))) for i ∈ start-1:start+1])
 
 end
 
