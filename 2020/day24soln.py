@@ -91,4 +91,4 @@ for day in range(100):
     
     h = new_h
     
-print(sum([x for x in h.values() if x == 1]))
+print(sum(h.values()))
