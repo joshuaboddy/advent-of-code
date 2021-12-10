@@ -41,15 +41,12 @@ def check_basin_is_not_full(basin, d):
 def get_basins(lowpoint, d):
     
     basin = [lowpoint]
-    touched = []
-    
+
     while check_basin_is_not_full(basin, d):
         for point in basin:
             for nbr in get_nbhd(point, d):
                 if nbr not in basin and d[nbr] != 9:
                     basin = basin + [nbr]
-                touched = touched + [nbr]
-
     return basin
 
 #part 1
