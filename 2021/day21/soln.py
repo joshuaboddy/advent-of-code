@@ -42,16 +42,16 @@ while len(universes) > 0:
         prev_score, prev_pos = prev_game_state[player_to_roll]
 
         for roll, freq in quantum_rolls_and_freq.items():
-            next_pos = (prev_pos + roll - 1) % 10 + 1			
-            next_score = prev_score + next_pos
+            this_pos = (prev_pos + roll - 1) % 10 + 1			
+            this_score = prev_score + this_pos
             
-            if next_score > 20:
+            if this_score > 20:
                 chicken_dinner[player_to_roll] += prev_freq * freq
                 continue
             
             next_roller = (player_to_roll + 1) % 2       
             game_state = [0,0,0]
-            game_state[player_to_roll] = (next_score, next_pos)	
+            game_state[player_to_roll] = (this_score, this_pos)	
             game_state[2] = next_roller 
             game_state[next_roller] = prev_game_state[next_roller]
                          
