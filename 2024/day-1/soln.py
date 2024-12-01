@@ -1,4 +1,13 @@
 import re
+import os
+
+def get_input_path(filename):
+    """Get path to input file relative to current script.
+    
+    Args:
+        filename (str): Name of input file
+    """
+    return os.path.join(os.path.dirname(__file__), filename)
 
 def read_input(file_path):
     """Read and return contents of file at given path."""
@@ -38,13 +47,13 @@ def parse_input(input_text):
     return numbers_left, numbers_right
 
 if __name__ == "__main__":
-    try:
-        input_text = read_input('2024/day-1/input.txt')
+    try:    
+        input_text = read_input(get_input_path('input.txt'))
         numbers_left, numbers_right = parse_input(input_text)
         
         print(part1(numbers_left, numbers_right))
         print(part2(numbers_left, numbers_right))
     except FileNotFoundError:
         print("Error: Input file not found")
-    except Exception as e:
-        print(f"Error: {e}")
+    except ValueError as e:
+        print(f"Error parsing input: {e}")
